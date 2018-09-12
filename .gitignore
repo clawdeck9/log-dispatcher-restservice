@@ -1,0 +1,13 @@
+build/
+bin/
+gradle/
+
+.mvn/
+.project
+.settings/
+mvnw
+mvnw.cmd
+target/
+notes.txt
+
+
