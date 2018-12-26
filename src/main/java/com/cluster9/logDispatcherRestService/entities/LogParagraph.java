@@ -3,14 +3,17 @@ package com.cluster9.logDispatcherRestService.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 @SuppressWarnings("serial")
 @Entity
 public class LogParagraph implements Serializable{
-	
+
 	@Id @GeneratedValue
 	Long id;
 	
@@ -18,6 +21,7 @@ public class LogParagraph implements Serializable{
 	String fileName;
 	String tag = "noTag";
 	String title  = "no title";
+//	@ElementCollection
 	ArrayList<String> lines;
 	
 	public LogParagraph() {

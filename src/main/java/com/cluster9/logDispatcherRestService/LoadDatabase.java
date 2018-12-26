@@ -1,6 +1,6 @@
 package com.cluster9.logDispatcherRestService;
 
-//import lombok.extern.slf4j.Slf4j;
+// import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import com.cluster9.logDispatcherRestService.dao.LogParagraphRepo;
 import com.cluster9.logDispatcherRestService.entities.LogParagraph;
 
 @Configuration
-//@Slf4j
+// @Slf4j
 class LoadDatabase {
 
 	@Bean
@@ -28,8 +28,12 @@ class LoadDatabase {
 			list.add("a third sentence");
 			list.add("and the final one");
 			Stream.of("java", "ccp", "js", "angular")
-					.forEach(title ->  repo.save(new LogParagraph(0, "log_filexxx", "test", title)));
-			// repo.findAll().forEach(p -> p.setLines(list));
+					.forEach(title ->    repo.save(new LogParagraph(0, "log"+title, "test", title)));
+			repo.findAll().forEach(p -> {
+				p.setLines(list);
+				repo.save(p);
+			});
 		};
 	}
+	
 }
