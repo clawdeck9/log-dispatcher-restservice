@@ -8,11 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.clustercld.logsmanager.entities.LogParagraph;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 @SuppressWarnings("serial")
 @Entity
-public class LogParagraph implements Serializable{
+public class WebLogParagraph implements Serializable{
 
 	@Id @GeneratedValue
 	Long id;
@@ -21,20 +22,43 @@ public class LogParagraph implements Serializable{
 	String fileName;
 	String tag = "noTag";
 	String title  = "no title";
-//	@ElementCollection
 	ArrayList<String> lines;
 	
-	public LogParagraph() {
+	public WebLogParagraph() {
 		super();
 		lines = new ArrayList<>();
 	}
 	
-	public LogParagraph(int index, String fileName, String tag, String title) {
+	public WebLogParagraph(int index, String fileName, String tag, String title) {
 		super();
 		this.index = index;
 		this.fileName = fileName;
 		this.tag = tag;
 		this.title = title;
+	}
+
+	public WebLogParagraph(LogParagraph p) {
+		super();
+		lines = new ArrayList<>();
+		this.index = p.getIndex();
+		this.fileName = p.getFileName();
+		this.tag = p.getTag();
+		this.title = p.getTitle();
+		int len = 254;
+		if (p.getLines().isEmpty()) {
+			System.out.println("check this : no lines in paragraph");
+		} else {
+			p.getLines().stream().forEach(line -> {
+				if (line != null) {
+					if (line.length() < len)
+						this.getLines().add(line);
+					else
+						System.out.println("WebLogParagraph::line truncated to:" + len);
+				} else {
+					System.out.println("check this : a null pointer instead of a line ");
+				}
+			});
+		}
 	}
 	
 	public int getIndex() {
@@ -74,7 +98,7 @@ public class LogParagraph implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "LogParagraph [index=" + index + ", fileName=" + fileName + ", tag=" + tag + ", title=" + title
+		return "WebLogParagraph [index=" + index + ", fileName=" + fileName + ", tag=" + tag + ", title=" + title
 				+ ", lines=" + lines + "]";
 	}
 	
