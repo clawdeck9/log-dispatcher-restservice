@@ -17,9 +17,9 @@ class LoadDatabase {
 	CommandLineRunner initDatabase(WebLogParagraphRepo repo) {
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
-			List<LogParagraph> logs = dispatcher.getLogParagraphs("/home/toshubu/Documents/logs4testing");
+//			List<LogParagraph> logs = dispatcher.getLogParagraphs("/home/toshubu/Documents/logs4testing");
+			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/toshubu/SYSTEM/Users/claude/Documents/ORG_PERSO/logs/Dispatched log  files");
 			logs.stream().forEach( p -> repo.save(new WebLogParagraph(p)));
 		};
 	}
-	
 }
