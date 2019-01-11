@@ -53,16 +53,15 @@ public class WebLogParagraph implements Serializable {
 		if (p.getLines().isEmpty()) {
 			System.out.println("check this : no lines in paragraph");
 		} else {
-			p.getLines().stream().forEachOrdered(line -> {
-				if (line != null) {
+			p.getLines().stream().forEachOrdered( line -> {
+				if (!(line.isEmpty())) {
 					this.lines = this.lines.concat(line);
-					System.out.println("WebLogParagraph" + this.title + "line written " + this.getLines().length()
-							+ "  line:" + line.length());
-				} else {
-					System.out.println("check this : a null pointer instead of a line ");
+					// System.out.println("WebLogParagraph" + this.title + "line written " + this.getLines().length()	+ "  line:" + line.length());
 				}
+			
 			});
 		}
+		
 	}
 
 	public int getIndex() {
