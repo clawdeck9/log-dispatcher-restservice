@@ -16,12 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.cluster9.jwtspringsecurity.security.JwtAuthenticationFilter;
-import com.cluster9.jwtspringsecurity.security.JwtAuthorizationFilter;
 
-// http://www.mkyong.com/spring-boot/spring-boot-spring-security-thymeleaf-example/
-//@Autowired
-//private AccessDeniedHandler accessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -41,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // roles admin allow to access /admin/**
     // roles user allow to access /user/**
-    // custom 403 access denied handler
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
