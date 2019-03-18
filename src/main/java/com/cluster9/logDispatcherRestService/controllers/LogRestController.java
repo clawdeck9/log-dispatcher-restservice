@@ -22,7 +22,6 @@ import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 @RestController
 public class LogRestController {
 	
-	voir le todo dans les notes!
 	
 	@Autowired
 	private WebLogParagraphRepo repo;

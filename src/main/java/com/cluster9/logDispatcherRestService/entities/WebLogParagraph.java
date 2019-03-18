@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.validation.constraints.NotBlank;
 
 import com.clustercld.logsmanager.entities.LogParagraph;
 
@@ -18,6 +19,7 @@ public class WebLogParagraph implements Serializable {
 	Long id;
 
 	int index;
+	@NotBlank( message="Validation: There must be a file name! ")
 	String fileName;
 	String tag = "noTag";
 	String title = "no title";
