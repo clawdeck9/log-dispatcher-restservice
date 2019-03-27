@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.clustercld.logsmanager.entities.LogParagraph;
 
@@ -19,10 +20,14 @@ public class WebLogParagraph implements Serializable {
 	Long id;
 
 	int index;
-	@NotBlank( message="Validation: There must be a file name! ")
-	String fileName;
-	String tag = "noTag";
-	String title = "no title";
+//	@NotBlank( message="Validation: There must be a file name! ")
+    @NotBlank(message ="The file name is required")
+    String fileName;
+    @NotBlank(message ="A tag is required")
+    @Size(min=2, max=15, message = "Please use less than 15 characters and no spaces")
+    String tag;
+    @NotBlank(message ="A title is required")
+    String title = "no title";
 	@Lob
 	@Column(name = "full_line", length = 48000)
 	String lines;
@@ -35,6 +40,8 @@ public class WebLogParagraph implements Serializable {
 	public WebLogParagraph(int index, String fileName, String tag, String title) {
 		super();
 		this.index = index;
+		if(fileName == null)
+			fileName = "no file name";
 		this.fileName = fileName;
 		this.tag = tag;
 		this.lines = "";
@@ -44,7 +51,10 @@ public class WebLogParagraph implements Serializable {
 	public WebLogParagraph(LogParagraph p) {
 		super();
 		this.index = p.getIndex();
-		this.fileName = p.getFileName();
+		if(p.getFileName() == null)
+			p.setFileName("no file name");
+		else
+			this.fileName = p.getFileName();
 		this.tag = p.getTag();
 		this.title = p.getTitle();
 		this.lines = "";
