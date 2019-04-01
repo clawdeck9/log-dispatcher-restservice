@@ -55,7 +55,7 @@ public class LogRestController {
     @PostMapping("/logs")
     public ResponseEntity<?> createLog(@Valid @RequestBody WebLogParagraph log, BindingResult result){
     	System.out.println("restcontroller::createLog method - restcontroller number= " + number + "log tag: "+log.getTag());
-    	
+    	System.out.println("restcontroller::createLog method - restcontroller number= " + number + "log calendar type: "+ log.getCreatedDate());
         ResponseEntity<?> errorMap = errorService.mapErrors(result);
         
         if(errorMap!=null) 
