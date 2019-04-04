@@ -25,7 +25,6 @@ public class WebLogParagraph implements Serializable {
 	Long id;
 
 	int index;
-//	@NotBlank( message="Validation: There must be a file name! ")
     @NotBlank(message ="The file name is required")
     String fileName;
     @NotBlank(message ="A tag is required")
