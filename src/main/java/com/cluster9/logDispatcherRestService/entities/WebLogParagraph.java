@@ -69,6 +69,7 @@ public class WebLogParagraph implements Serializable {
 		this.title = p.getTitle();
 		this.lines = "";
 		this.castLines(p);
+		
 		this.processCreatedDate(p);
 	}
 

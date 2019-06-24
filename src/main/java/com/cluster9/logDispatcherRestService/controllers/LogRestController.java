@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,7 +32,7 @@ import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
 
 //@RefreshScope
 @RestController
-@RequestMapping("pars")
+@RequestMapping("/logger")
 public class LogRestController {
 	
 	
@@ -55,9 +56,11 @@ public class LogRestController {
 	}
 	
 	@GetMapping("/logs/{id}")
-	public Page<WebLogParagraph>  logById(@PathVariable Long id, @NotNull final Pageable pageable){
+	public ResponseEntity<?>  logById(@PathVariable Long id, @NotNull final Pageable pageable){
 		System.out.println("restcontroller::logsById method - restcontroller number= " + number);
-		return repo.logParagraphById(id, pageable );
+
+		Page<WebLogParagraph> foundLogs = repo.logParagraphById(id, pageable );
+		return new ResponseEntity<Page<WebLogParagraph>>(foundLogs, HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/tags")
@@ -70,7 +73,7 @@ public class LogRestController {
 //	rien à voir avec le user, pourtant, il reste le seul moyen de retrouver le logpar à detruire avant réécriture. On accepte de changer l'id et de créer un nouveau log avec un autre id
 //	je peux quand même tester dans le repo si je peux recreer un log avec un id existant
     @PostMapping("/logs")
-    public ResponseEntity<?> createLog(@Valid @RequestBody WebLogParagraph log, BindingResult result){
+    public ResponseEntity<?> createLog( @Valid @RequestBody WebLogParagraph log, BindingResult result){
     	System.out.println("restcontroller::createLog method - restcontroller number= " + number + "log tag: "+log.getTag());
     	
     	ResponseEntity<?> errorMap = errorService.mapErrors(result);
@@ -101,22 +104,12 @@ public class LogRestController {
     	WebLogParagraph createdLog = repo.saveAndFlush(log);
     	return new ResponseEntity<WebLogParagraph>(createdLog, HttpStatus.CREATED);
     }
+    
     @DeleteMapping
     public ResponseEntity<?> deleteLog(@PathVariable Long id, @NotNull final Pageable pageable){
     	repo.deleteById(id);
     	return new ResponseEntity<String>("deleted", HttpStatus.ACCEPTED);
     }
     
-	
-	
-//	public Page<YourEntityHere> readPageable(@NotNull final Pageable pageable) {
-//	    return someService.search(pageable);
-//	}
-//	
-	
-	@RequestMapping("/home")
-	public  long home(){
-		System.out.println("restcontroller:: home: " + number);
-		return repo.count();
-	}
+
 }
