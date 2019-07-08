@@ -5,11 +5,14 @@ import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -39,6 +42,9 @@ public class WebLogParagraph implements Serializable {
 	Date createdDate;
 	@JsonFormat(pattern="yyyy-mm-dd")
 	Date accessedDate;
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn
+    Tag tagEntity;
 
 
 
