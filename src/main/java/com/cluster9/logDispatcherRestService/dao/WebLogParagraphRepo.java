@@ -19,13 +19,13 @@ public interface WebLogParagraphRepo extends PagingAndSortingRepository<WebLogPa
 	@Query("select p from WebLogParagraph p where p.fileName like :kw")
 	public Page<WebLogParagraph> logParagraphByKeyword(@Param("kw") String kw, Pageable pageable);
 	
-	@Query("select p from WebLogParagraph p where p.tag like :tag")
+	@Query("select p from WebLogParagraph p where p.tagName like :tag")
 	public Page<WebLogParagraph> logParagraphByTag(@Param("tag") String tag,  Pageable pageable	);
 	
 //	tag are String type?
 //	knows the fields by name?
 //	where p.tag not null
-	@Query("select distinct p.tag from WebLogParagraph p order by p.tag")
+	@Query("select distinct p.tagName from WebLogParagraph p order by p.tagName")
 	public Page<String> tags(Pageable pageable);
 	
 	@Query("select p from WebLogParagraph p where p.id like :id")
@@ -38,5 +38,4 @@ public interface WebLogParagraphRepo extends PagingAndSortingRepository<WebLogPa
 	
 	@Override
 	public boolean existsById(Long id);
-	
 }

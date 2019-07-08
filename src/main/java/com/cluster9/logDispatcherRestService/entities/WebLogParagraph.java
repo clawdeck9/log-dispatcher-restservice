@@ -1,7 +1,6 @@
 package com.cluster9.logDispatcherRestService.entities;
 
 import java.io.Serializable;
-import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,16 +8,25 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.cluster9.logDispatcherRestService.service.TagService;
 import com.clustercld.logsmanager.entities.LogParagraph;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @SuppressWarnings("serial")
 @Entity
 public class WebLogParagraph implements Serializable {
+	
+	@Autowired
+	private TagService tagService;
 
 	@Id
 	@GeneratedValue
@@ -27,9 +35,15 @@ public class WebLogParagraph implements Serializable {
 	int index;
     @NotBlank(message ="The file name is required")
     String fileName;
+    
+
     @NotBlank(message ="A tag is required")
     @Size(min=2, max=15, message = "Please use less than 15 characters and no spaces")
-    String tag;
+    String tagName;
+    
+    @ManyToOne @JoinColumn
+    Tag tag;
+    
     @NotBlank(message ="A title is required")
     String title = "no title";
 	@Lob
@@ -53,7 +67,7 @@ public class WebLogParagraph implements Serializable {
 		if(fileName == null)
 			fileName = "no file name";
 		this.fileName = fileName;
-		this.tag = tag;
+		this.tagName = tag;
 		this.lines = "";
 		this.title = title;
 	}
@@ -65,7 +79,19 @@ public class WebLogParagraph implements Serializable {
 			p.setFileName("no file name");
 		else
 			this.fileName = p.getFileName();
-		this.tag = p.getTag();
+		this.tagName = p.getTag();
+		// create or find a tag instance from tagName
+		// question: create a instance of Tag when initializing the WLP;
+		// implies an access to the tag repo to check wether the tag exists or have to be created
+		// can only be instanciated without a wlp, add it later
+		Tag matchingTag = tagService.findByName(this.tagName);
+		if(matchingTag == null) {
+			this.tag = new Tag(tagName);
+			this.tag.addWeblogparagraph(this);
+		}else {
+			tagService.findByName("this.tagName").addWeblogparagraph(this);
+		}
+		
 		this.title = p.getTitle();
 		this.lines = "";
 		this.castLines(p);
@@ -156,11 +182,11 @@ public class WebLogParagraph implements Serializable {
 	}
 
 	public String getTag() {
-		return tag;
+		return tagName;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
 	}
 
 	public String getTitle() {
