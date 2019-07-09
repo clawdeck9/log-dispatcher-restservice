@@ -16,16 +16,37 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.cluster9.logDispatcherRestService.dao.TagRepo;
 import com.clustercld.logsmanager.entities.LogParagraph;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @SuppressWarnings("serial")
 @Entity
 public class WebLogParagraph implements Serializable {
+	
+//	@Autowired il vaudrait mieux gérer le Tag hors du log, mais utiliser le read du tag peut etre ok -> marche pas du tout
+//	on ne peut pas utiliser le bean repo dans cette entité
+//	TagRepo tagRepo;
 
 	@Id
 	@GeneratedValue
 	Long id;
+
+	/**
+	 * @return the tagEntity
+	 */
+	public Tag getTagEntity() {
+		return tagEntity;
+	}
+
+	/**
+	 * @param tagEntity the tagEntity to set
+	 */
+	public void setTagEntity(Tag tagEntity) {
+		this.tagEntity = tagEntity;
+	}
 
 	int index;
     @NotBlank(message ="The file name is required")
@@ -52,6 +73,8 @@ public class WebLogParagraph implements Serializable {
 		super();
 		this.lines = "";
 	}
+	
+//	màj du tag: si le tag est ajouté à la prop tag du log, le saveLog peut gérer le save du tag en auto, donc à tester
 
 	public WebLogParagraph(int index, String fileName, String tag, String title) {
 		super();
@@ -62,6 +85,8 @@ public class WebLogParagraph implements Serializable {
 		this.tag = tag;
 		this.lines = "";
 		this.title = title;
+		
+		
 	}
 
 	public WebLogParagraph(LogParagraph p) {
@@ -77,6 +102,9 @@ public class WebLogParagraph implements Serializable {
 		this.castLines(p);
 		
 		this.processCreatedDate(p);
+		
+		
+		//// créer le tag et ajouter le this, mais tester le tagSave et tagModify avant via le tag restcontroller, mais créer un tag avant
 	}
 
 	private void processCreatedDate(LogParagraph p) {

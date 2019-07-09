@@ -5,10 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 
 // create a one-to-many relation with the log entity
@@ -19,14 +21,21 @@ public class Tag implements Serializable{
 	@Id @GeneratedValue
 	Long id;
 
+//	@NotBlank
+//	@Column(unique=true)
 	String name;
+	
 	String comment;
+	
 	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
 	private Set<WebLogParagraph> logs;//// only the set interface available
 	
-	
+	public Tag() {
+		super();
+		this.logs = new HashSet<>();
+	}
 	// load WebLogParagraf from log_XXX.txt files folder
-	Tag(String tagName){
+	public Tag(String tagName){
 		this.name = tagName;
 		this.logs = new HashSet<>();
 	}
@@ -47,9 +56,6 @@ public class Tag implements Serializable{
 	}
 
 
-	/**
-	 * @return the logs
-	 */
 	public Set<WebLogParagraph> getLogs() {
 		return logs;
 	}
