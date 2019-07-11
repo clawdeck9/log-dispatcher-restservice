@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 
 
-public interface WebLogParagraphRepo extends PagingAndSortingRepository<WebLogParagraph, Long>{
+public interface WebLogParagraphRepo extends JpaRepository<WebLogParagraph, Long>{
 	
 	@Query("select p from WebLogParagraph p where p.fileName like :kw")
 	public Page<WebLogParagraph> logParagraphByKeyword(@Param("kw") String kw, Pageable pageable);

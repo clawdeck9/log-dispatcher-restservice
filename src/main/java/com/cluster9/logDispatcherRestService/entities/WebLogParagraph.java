@@ -34,16 +34,12 @@ public class WebLogParagraph implements Serializable {
 	@GeneratedValue
 	Long id;
 
-	/**
-	 * @return the tagEntity
-	 */
+
 	public Tag getTagEntity() {
 		return tagEntity;
 	}
 
-	/**
-	 * @param tagEntity the tagEntity to set
-	 */
+	
 	public void setTagEntity(Tag tagEntity) {
 		this.tagEntity = tagEntity;
 	}
@@ -63,8 +59,9 @@ public class WebLogParagraph implements Serializable {
 	Date createdDate;
 	@JsonFormat(pattern="yyyy-mm-dd")
 	Date accessedDate;
+	
     @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn
+    @JoinColumn(name="tag_entity")
     Tag tagEntity;
 
 
