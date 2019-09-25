@@ -12,11 +12,16 @@ import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.NaturalId;
+import org.springframework.transaction.annotation.Transactional;
 
 
 // create a one-to-many relation with the log entity
@@ -29,13 +34,15 @@ public class Tag implements Serializable{
 
 	@NotBlank
 	@Column(unique=true)
+	
+	//@NaturalId
 	String name;
 	
 	String comment;
 	
 
-	@OneToMany(mappedBy = "tag", cascade = CascadeType.PERSIST)
-	private Set<WebLogParagraph> logs;//// only the set interface available
+	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+	private List<WebLogParagraph> logs = new ArrayList<WebLogParagraph>();//// only the set interface available
 	
 	//	for testing purposes only. It's not saved in the DB though. this is ok for primitives only
 	@ElementCollection 
@@ -45,46 +52,38 @@ public class Tag implements Serializable{
 	
 	public Tag() {
 		super();
-		this.logs = new HashSet<>();
+		this.logs = new ArrayList<>();
 	}
 	// load WebLogParagraf from log_XXX.txt files folder
 	public Tag(String tagName){
 		this.name = tagName;
-		this.logs = new HashSet<>();
+		this.logs = new ArrayList<>();
 		this.logNames = new ArrayList<String>();
 		this.logNames.add("log first");
 		this.logNames.add("log second");
 	}
 
 
-	/**
-	 * @return the id
-	 */
 	public Long getId() {
 		return id;
 	}
-	/**
-	 * @param id the id to set
-	 */
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	/**
-	 * @return the logNames
-	 */
+	
 	public List<String> getLogNames() {
 		return logNames;
 	}
-	/**
-	 * @param logNames the logNames to set
-	 */
+	
 	public void setLogNames(List<String> logNames) {
 		this.logNames = logNames;
 	}
+	
 	public void addWebLogParagraph(WebLogParagraph log) {
 		System.out.println("addWebLogParagraph " + log);
 		logs.add(log);
-		log.setTagEntity(this);
+//		log.setTagEntity(this);
 	}
 	
 	@Override
@@ -106,7 +105,7 @@ public class Tag implements Serializable{
 //	}
 
 
-	public Set<WebLogParagraph> getLogs() {
+	public List<WebLogParagraph> getLogs() {
 		return logs;
 	}
 
@@ -114,7 +113,7 @@ public class Tag implements Serializable{
 	/**
 	 * @param logs the logs to set
 	 */
-	public void setLogs(Set<WebLogParagraph> logs) {
+	public void setLogs(List<WebLogParagraph> logs) {
 		this.logs = logs;
 	}
 
@@ -133,23 +132,23 @@ public class Tag implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-//	
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o)
-//            return true;
-//             
-//        if (!(o instanceof PostComment))
-//            return false;
-//             
-//        return
-//            id != null &&
-//           id.equals(((PostComment) o).getId());
-//    }
-//    @Override
-//    public int hashCode() {
-//        return 31;
-//    }
-//	
+	
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+             
+        if (!(obj instanceof Tag))
+            return false;
+             
+        return
+            id != null && id.equals(((Tag) obj).getId());
+    }
+	
+    @Override
+    public int hashCode() {
+        return id;
+    }
+	
 
 }

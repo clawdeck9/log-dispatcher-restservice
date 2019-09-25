@@ -16,6 +16,7 @@ public interface TagRepo extends JpaRepository<Tag, Long> {
 	@Query("select p from Tag p where p.name like :name")
 	public Page<Tag> tagsByName(@Param("name") String name, Pageable pageable);
 	
+
 	@Query("select distinct p from Tag p where p.name like :name")
 	public Tag tagByName(@Param("name") String name);
 
