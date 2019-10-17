@@ -1,6 +1,7 @@
 package com.cluster9.logDispatcherRestService.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -32,8 +33,8 @@ import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
 
 //@RefreshScope
 @RestController
-@RequestMapping("/logger")
-public class LogRestController {
+@RequestMapping("/l")
+public class LogController {
 	
 	
 	@Autowired
@@ -45,39 +46,38 @@ public class LogRestController {
 
 	@GetMapping("/logs")
 	public Iterable<WebLogParagraph>  logs(){
-		System.out.println("restcontroller::logs method - restcontroller number= " + number);
+//		System.out.println("restcontroller::logs method - restcontroller number= " + number);
 		return repo.findAll();
 	}
 
 	@GetMapping(value = "/logs", params = { "tag"})
 //	public Page<WebLogParagraph>  logsByTag(@PathVariable String tag, @NotNull final Pageable pageable){
 	public Page<WebLogParagraph>  logsByTag(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
-		System.out.println("restcontroller::logsByTags method - restcontroller number= " + number);
-		return repo.logParagraphByTag(tag, pageable );
+//		System.out.println("restcontroller::logsByTags method - restcontroller number= " + number);
+		return repo.findByTag(tag, pageable );
 	}
 	
 	@GetMapping(value="/logs", params= {"id"})
-	public ResponseEntity<?>  logById(@RequestParam Long id, @NotNull final Pageable pageable){
+	public ResponseEntity<?>  logByIdPaged(@RequestParam Long id, @NotNull final Pageable pageable){
 		System.out.println("restcontroller::logsById method - restcontroller number= " + number);
 
-		Page<WebLogParagraph> foundLogs = repo.logParagraphById(id, pageable );
+		Page<WebLogParagraph> foundLogs = repo.findById(id, pageable );
 		return new ResponseEntity<Page<WebLogParagraph>>(foundLogs, HttpStatus.ACCEPTED);
 	}
 	
-	// this is not an option: the page is not a resource hence pagenumber must be a param of the url
-	// the pageable inst sent to the repo contains the required page number and the repo will respond with the req page
-	@GetMapping(value = "/tags", params = { "page"})
-	public Page<String> tags(final Pageable pageable, @RequestParam("page") int pageNumber){
-		//System.out.println("page number in Tag List: should be undefined  " + pageable.getPageNumber());
-		//System.out.println("page number in params from url :" + pageNumber);
-		return repo.tags(pageable);
+	@GetMapping(value="/log", params= {"id"})
+	public ResponseEntity<?>  logById(@RequestParam Long id, @NotNull final Pageable pageable){
+		System.out.println("restcontroller::logsById method - restcontroller number= " + number);
+
+		Optional<WebLogParagraph> foundLog = repo.findById(id);
+		if(foundLog.isPresent()) {
+			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.ACCEPTED);
+		} else {
+			return new ResponseEntity<WebLogParagraph>(new WebLogParagraph(0, "noLog", "", "empty"), HttpStatus.NOT_FOUND);
+		}
 	}
-	
-//	tester ici si l'id est déjà utilisé
-//	en fait tout reste à faire, le mieux serait de ne pas changer le constructeur de logpar, de ne pas ajouter l'id puisqu'il est en auto. l'id n'a rien à voir avec le contenu donc
-//	rien à voir avec le user, pourtant, il reste le seul moyen de retrouver le logpar à detruire avant réécriture. On accepte de changer l'id et de créer un nouveau log avec un autre id
-//	je peux quand même tester dans le repo si je peux recreer un log avec un id existant
-    @PostMapping("/logs")
+
+	@PostMapping("/logs")
     public ResponseEntity<?> createLog( @Valid @RequestBody WebLogParagraph log, BindingResult result){
     	System.out.println("restcontroller::createLog method - restcontroller number= " + number + "log tag: "+log.getTag());
     	

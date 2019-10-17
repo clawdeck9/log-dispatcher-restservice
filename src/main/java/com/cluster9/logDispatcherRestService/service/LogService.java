@@ -28,7 +28,7 @@ public class LogService {
 	@Transactional
 	public void populateDB(LogParagraph p) {
 		WebLogParagraph newLog = new WebLogParagraph(p);
-		Tag tag = tagRepo.tagByName(newLog.getTag());
+		Tag tag = tagRepo.findByName(newLog.getTag());
 		if (tag != null) {
 			System.out.println("tag exist?: " + tag.getName());
 			tag.setComment("comment ok");
