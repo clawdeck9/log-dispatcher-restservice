@@ -1,5 +1,6 @@
 package com.cluster9.logDispatcherRestService.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -19,10 +20,15 @@ import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 public interface WebLogParagraphRepo extends JpaRepository<WebLogParagraph, Long>{
 	
 	public Page<WebLogParagraph> findByTag(@Param("tag") String tag,  Pageable pageable	);
+	
+	public List<WebLogParagraph> findByTag(@Param("tag") String tag);
 
-	public Page<WebLogParagraph> findById(@Param("id") Long id, @NotNull Pageable pageable);
+	public Page<WebLogParagraph> findById(@NotNull @Param("id") Long id,  Pageable pageable);
 	
 	public Optional<WebLogParagraph> findById(@Param("id") Long id);
+	
+	// check if the return type can be of wlp directly
+//	public WebLogParagraph findById(@Param("id") Long id);
 	
 	@Override
 	public void deleteById(Long id);

@@ -41,7 +41,7 @@ public class Tag implements Serializable{
 	String comment;
 	
 
-	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tag")
 	private List<WebLogParagraph> logs = new ArrayList<WebLogParagraph>();//// only the set interface available
 	
 	//	for testing purposes only. It's not saved in the DB though. this is ok for primitives only
@@ -147,7 +147,7 @@ public class Tag implements Serializable{
 	
     @Override
     public int hashCode() {
-        return id;
+        return id.intValue();
     }
 	
 

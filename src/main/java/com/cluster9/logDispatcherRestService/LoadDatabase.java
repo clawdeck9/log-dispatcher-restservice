@@ -27,7 +27,7 @@ class LoadDatabase {
 	CommandLineRunner initDatabase() {
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
-//			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/claude/SSD-Claude/new_fs/ORG_PERSO/logs/testLogs");
+			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/claude/SSD-Claude/new_fs/ORG_PERSO/logs/testLogs");
 			List<LogParagraph> logs = dispatcher
 					.getLogParagraphs("/home/home/claude/java_workspace/log-dispatcher-restservice_notes/testLogs");
 			// System.out.println("\nLoadDatabase::tempTag.getLogs().toString(): "

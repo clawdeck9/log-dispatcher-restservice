@@ -1,5 +1,7 @@
 package com.cluster9.logDispatcherRestService.dao;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +18,8 @@ public interface TagRepo extends JpaRepository<Tag, Long> {
 	public Page<Tag> findByName(@Param("name") String name, Pageable pageable);
 	
 	public Tag findByName(@Param("name") String name);
+	
+	public List<Tag> findAll();
+	
+	public Page<Tag> findAll(Pageable pageable);
 }

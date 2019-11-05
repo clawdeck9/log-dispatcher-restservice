@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,10 +35,11 @@ import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
 
 //@RefreshScope
 @RestController
-@RequestMapping("/l")
+@RequestMapping("/")
 public class LogController {
 	
-	
+
+    Logger logger = LoggerFactory.getLogger(LoggingController.class);
 	@Autowired
 	private WebLogParagraphRepo repo;
 	@Autowired
@@ -46,32 +49,27 @@ public class LogController {
 
 	@GetMapping("/logs")
 	public Iterable<WebLogParagraph>  logs(){
-//		System.out.println("restcontroller::logs method - restcontroller number= " + number);
 		return repo.findAll();
 	}
 
-	@GetMapping(value = "/logs", params = { "tag"})
-//	public Page<WebLogParagraph>  logsByTag(@PathVariable String tag, @NotNull final Pageable pageable){
+	@GetMapping(value = "/logs-paged", params = { "tag"})
 	public Page<WebLogParagraph>  logsByTag(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
-//		System.out.println("restcontroller::logsByTags method - restcontroller number= " + number);
 		return repo.findByTag(tag, pageable );
 	}
 	
-	@GetMapping(value="/logs", params= {"id"})
-	public ResponseEntity<?>  logByIdPaged(@RequestParam Long id, @NotNull final Pageable pageable){
-		System.out.println("restcontroller::logsById method - restcontroller number= " + number);
-
-		Page<WebLogParagraph> foundLogs = repo.findById(id, pageable );
-		return new ResponseEntity<Page<WebLogParagraph>>(foundLogs, HttpStatus.ACCEPTED);
+	@GetMapping(value="/logs", params= {"tag"})
+	public ResponseEntity<?>  logByIdPaged(@RequestParam String tag){
+		
+		List<WebLogParagraph> foundLogs = repo.findByTag(tag );
+		return new ResponseEntity<List<WebLogParagraph>>(foundLogs, HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/log", params= {"id"})
-	public ResponseEntity<?>  logById(@RequestParam Long id, @NotNull final Pageable pageable){
-		System.out.println("restcontroller::logsById method - restcontroller number= " + number);
+	public ResponseEntity<?>  logById(@RequestParam Long id){
 
 		Optional<WebLogParagraph> foundLog = repo.findById(id);
 		if(foundLog.isPresent()) {
-			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.ACCEPTED);
+			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<WebLogParagraph>(new WebLogParagraph(0, "noLog", "", "empty"), HttpStatus.NOT_FOUND);
 		}

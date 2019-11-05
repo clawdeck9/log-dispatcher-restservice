@@ -108,10 +108,10 @@ public class WebLogParagraph implements Serializable {
 		if(p.getFileName().isEmpty())
 			this.setCreatedDate(new Calendar.Builder().setCalendarType("iso8601").setDate(2010, 1, 20).build().getTime());
 		else {
-			System.out.println("test splitter: " + p.getFileName());
+//			System.out.println("test splitter: " + p.getFileName());
 			String cldDate = "";
 			if(p.getFileName().contains("claude")) {
-				System.out.println("claude found");
+//				System.out.println("claude found");
 				cldDate = p.getFileName().split(".txt")[0].split("log_claude")[1];	
 			}
 			else if (p.getFileName().contains("it")) {
@@ -120,21 +120,21 @@ public class WebLogParagraph implements Serializable {
 			else {
 				System.out.println("no matching filename to process");
 			}
-			System.out.println("test split - created date: " + cldDate);
-			System.out.println("year = " + cldDate.substring(6,8));
+//			System.out.println("test split - created date: " + cldDate);
+//			System.out.println("year = " + cldDate.substring(6,8));
 			this.setCreatedDate(new Calendar.Builder().setCalendarType("iso8601")
 					.setDate(Integer.valueOf(cldDate.substring(0,  4)), Integer.valueOf(cldDate.substring(4, 6))-1, Integer.valueOf(cldDate.substring(6, 8)))
 					.build()
 					.getTime());
 		}
-		System.out.println("old log files processed this created date = " + this.getCreatedDate());
+//		System.out.println("old log files processed this created date = " + this.getCreatedDate());
 		this.setAccessedDate(this.getCreatedDate());	
 
 	}
 
 	private void castLines(LogParagraph p) {
 		if (p.getLines().isEmpty()) {
-			System.out.println("check this : no lines in paragraph");
+//			System.out.println("check this : no lines in paragraph");
 		} else {
 			p.getLines().stream().forEachOrdered( line -> {
 				if (!(line.isEmpty())) {
