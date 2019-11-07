@@ -34,27 +34,22 @@ public class WebLogParagraph implements Serializable {
 	@GeneratedValue
 	Long id;
 
-
-	public Tag getTagEntity() {
-		return tagEntity;
-	}
-
-	
-	public void setTagEntity(Tag tagEntity) {
-		this.tagEntity = tagEntity;
-	}
-
 	int index;
-    @NotBlank(message ="The file name is required")
+
+	@NotBlank(message ="The file name is required")
     String fileName;
-    @NotBlank(message ="A tag is required")
+    
+	@NotBlank(message ="A tag is required")
     @Size(min=2, max=15, message = "Please use less than 15 characters and no spaces")
     String tag;
-    @NotBlank(message ="A title is required")
+    
+	@NotBlank(message ="A title is required")
     String title = "no title";
+	
 	@Lob
 	@Column(name = "full_line", length = 48000)
 	String lines;
+	
 	@JsonFormat(pattern="yyyy-mm-dd")
 	Date createdDate;
 	@JsonFormat(pattern="yyyy-mm-dd")
@@ -146,6 +141,17 @@ public class WebLogParagraph implements Serializable {
 		}
 		
 	}
+	
+
+	public Tag getTagEntity() {
+		return tagEntity;
+	}
+
+	
+	public void setTagEntity(Tag tagEntity) {
+		this.tagEntity = tagEntity;
+	}
+
 	public Long getId() {
 		return id;
 	}
