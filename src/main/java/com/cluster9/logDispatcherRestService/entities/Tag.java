@@ -81,7 +81,7 @@ public class Tag implements Serializable{
 	}
 	
 	public void addWebLogParagraph(WebLogParagraph log) {
-		System.out.println("addWebLogParagraph " + log);
+//		System.out.println("addWebLogParagraph " + log);
 		logs.add(log);
 //		log.setTagEntity(this);
 	}

@@ -1,5 +1,7 @@
 package com.cluster9.logDispatcherRestService.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,9 +24,14 @@ public class LogService {
 	WebLogParagraphRepo logRepo;
 	@Autowired
 	TagRepo tagRepo;
+	
+	Logger logger = LoggerFactory.getLogger("com.cluster9.logDispatcherRestService.service");
 
 	@Transactional
 	public void populateDB(LogParagraph p) {
+		
+		logger.debug("wasCalled");
+		
 		WebLogParagraph newLog = new WebLogParagraph(p);
 		Tag tag = tagRepo.findByName(newLog.getTag());
 		if (tag != null) {

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
 //import com.cluster9.logDispatcherRestService.dao.TagRepo;
 //import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
 //import com.cluster9.logDispatcherRestService.entities.Tag;
@@ -21,10 +22,15 @@ class LoadDatabase {
 
 	@Autowired
 	LogService logService;
+//	@Autowired
+//	WebLogParagraphRepo repofortest;
 
 	@Bean
 	@Transactional
 	CommandLineRunner initDatabase() {
+		//testing the test bean management process here!!!!
+		//repofortest.existsById(new Long(1));
+		
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
 //			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/claude/SSD-Claude/new_fs/ORG_PERSO/logs/testLogs");

@@ -28,9 +28,8 @@ import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
 
 //@RunWith(SpringRunner.class)
-//@SpringBootTest: not with datajpatest
-@DataJpaTest
-//@Import(LoadDatabase.class) later ?
+@SpringBootTest
+@Import(LoadDatabase.class)
 public class LogDispatcherRestServiceApplicationTests {
 	
 	@Autowired
@@ -56,8 +55,6 @@ public class LogDispatcherRestServiceApplicationTests {
 	
 //	log repo: get by id, check the class name
 	@Test
-	@Sql("/logs.sql")
-//	@Sql(scripts={"classpath:logs.sql"})
 	public void givenAnId_getALogOpt() {
 		Optional<WebLogParagraph> oplog = logRepo.findById(id);
 		assertThat(logRepo).isNotNull();
@@ -65,35 +62,54 @@ public class LogDispatcherRestServiceApplicationTests {
 //		assertTrue("wlp type checked", oplog.get().getClass().getName()=="com.cluster9.logDispatcherRestService.entities.WebLogParagraph");
 	}
 
-//	@Test
-//	public void givenAnId_getALogPage() {
-//		Pageable p = PageRequest.of(0, 5);
-//		Page<WebLogParagraph> logPage = logRepo.findById(id, p);
-//		assertTrue("no log found", logPage != null);
-//		assertTrue("wlp type checked", logPage.getContent().get(0).getClass().getName()=="com.cluster9.logDispatcherRestService.entities.WebLogParagraph");
-//	}
+	@Test
+	public void givenAnId_getALogPage() {
+		Pageable p = PageRequest.of(0, 5);
+		Page<WebLogParagraph> logPage = logRepo.findById(id, p);
+		assertThat(logPage != null).isTrue();
+		assertThat(logPage.getContent().get(0).getClass().getName()=="com.cluster9.logDispatcherRestService.entities.WebLogParagraph").isTrue();
+	}
 
 //	log repo: get by id, check the class name
-//	@Test
-//	public void givenATag_getALogPage() {
-//		Pageable p = PageRequest.of(0, 5);
-//		Page<WebLogParagraph> page = logRepo.findByTag(tag, p);
-//		assertFalse("no log found by tag", page ==  null);
-//		if (page != null) {
-//			page.forEach(wlp -> {
-//				assertTrue("a wlp was not found", wlp == null);
-//				assertEquals("a tag is wrong: ", tag, wlp.getTag());
-//			});
-//		}
-//	}
+	@Test
+	public void givenATag_getALogPage() {
+		Pageable p = PageRequest.of(0, 5);
+		Page<WebLogParagraph> page = logRepo.findByTag(tag, p);
+		assertThat(page ==  null).isFalse();
+		if (page != null) {
+			assertThat(page.getSize() > 0);
+			page.forEach(wlp -> {
+				assertThat(wlp == null).isTrue();
+				assertEquals("a tag is wrong: ", tag, wlp.getTag());
+			});
+		}
+	}
+	
+	@Test
+	public void addALog_getThisLog() {
+		assertThat(logRepo).isNotNull();
+		logRepo.saveAndFlush(new WebLogParagraph(3, "filename", "tagname", "thetitle"));
+		
+		Pageable p = PageRequest.of(0, 5);
+		Page<WebLogParagraph> page = logRepo.findByTag("tagname", p);
+		assertThat(page ==  null).isFalse();
+		if (page != null) {
+			assertThat(page.getSize() > 0);
+			page.forEach(wlp -> {
+				assertThat(wlp != null).isTrue();
+				assertEquals("a tag is wrong: ", tag, wlp.getTag());
+			});
+		}
+		
+	}
 
 	
 //	test the test
-	@Test
-	public void whenAssertingEquality_thenEqual() {
-	    String expected = "test";
-	    String actual = "test";
-	 
-	    assertEquals(expected, actual);
-	}
+//	@Test
+//	public void whenAssertingEquality_thenEqual() {
+//	    String expected = "test";
+//	    String actual = "test";
+//	 
+//	    assertEquals(expected, actual);
+//	}
 }
