@@ -1,6 +1,8 @@
 package com.cluster9.logDispatcherRestService;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,24 +24,28 @@ class LoadDatabase {
 
 	@Autowired
 	LogService logService;
-//	@Autowired
-//	WebLogParagraphRepo repofortest;
+	
 
 	@Bean
 	@Transactional
 	CommandLineRunner initDatabase() {
-		//testing the test bean management process here!!!!
-		//repofortest.existsById(new Long(1));
 		
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
 //			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/claude/SSD-Claude/new_fs/ORG_PERSO/logs/testLogs");
-			List<LogParagraph> logs = dispatcher
-					.getLogParagraphs("/home/home/claude/java_workspace/log-dispatcher-restservice_notes/testLogs");
+			List<LogParagraph> logs = dispatcher.getLogParagraphs("/home/home/claude/java_workspace/log-dispatcher-restservice_notes/testLogs");
+			
 			// System.out.println("\nLoadDatabase::tempTag.getLogs().toString(): "
 			// +tempTag.getLogs().toString());
+			
 			// load the data to the base
-			logs.stream().forEach(p -> {
+			// the Function is here for learning purposes only
+			Function<LogParagraph, LogParagraph> dont = p -> {
+				System.out.println("map then forEach " + p.getTitle());
+				return p;
+			};
+			
+			logs.stream().map(p -> dont.apply(p)).forEach(p -> {
 				logService.populateDB(p);
 			});
 		};
