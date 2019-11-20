@@ -25,10 +25,16 @@ class LoadDatabase {
 	@Autowired
 	LogService logService;
 	
-
+	
+	private String noStaticFunctionOkOrNo() {
+		return "the instance level function works fine, thus you can read this!  ";
+	}
+	
 	@Bean
 	@Transactional
 	CommandLineRunner initDatabase() {
+		
+		final int[] innerVar = {0,0,0,0};
 		
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
@@ -40,14 +46,20 @@ class LoadDatabase {
 			
 			// load the data to the base
 			// the Function is here for learning purposes only
-			Function<LogParagraph, LogParagraph> dont = p -> {
+			DontChangeAnything dont = p -> {
+				System.out.println(noStaticFunctionOkOrNo());
 				System.out.println("map then forEach " + p.getTitle());
 				return p;
 			};
 			
-			logs.stream().map(p -> dont.apply(p)).forEach(p -> {
-				logService.populateDB(p);
-			});
+			logs.stream()
+						.map(p -> dont.writeAComment(p))
+						.map(p -> {
+							innerVar[0] = (innerVar[0])+1;
+							System.out.println(noStaticFunctionOkOrNo() + innerVar[0]);
+							return p;
+						})
+						.forEach(p -> logService.populateDB(p));
 		};
 	}
 }

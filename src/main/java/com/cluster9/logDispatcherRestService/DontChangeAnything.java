@@ -6,5 +6,10 @@ import com.clustercld.logsmanager.entities.LogParagraph;
 public interface DontChangeAnything {
 	
 	LogParagraph writeAComment(LogParagraph log);
+	
+	default LogParagraph writeADefaultComment(LogParagraph log) {
+		System.out.println("functional interface default comment");
+		return log;
+	}
 
 }
