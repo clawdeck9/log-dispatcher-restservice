@@ -35,7 +35,7 @@ class LoadDatabase {
 	CommandLineRunner initDatabase() {
 		
 		final int[] innerVar = {0,0,0,0};
-		
+				
 		return args -> {
 			DispatchLogFilesContent dispatcher = new DispatchLogFilesContent();
 //			List<LogParagraph> logs = dispatcher.getLogParagraphs("/media/claude/SSD-Claude/new_fs/ORG_PERSO/logs/testLogs");
@@ -59,7 +59,9 @@ class LoadDatabase {
 							System.out.println(noStaticFunctionOkOrNo() + innerVar[0]);
 							return p;
 						})
-						.forEach(p -> logService.populateDB(p));
+						.forEach(p -> {
+							logService.populateDB(p);
+						});
 		};
 	}
 }

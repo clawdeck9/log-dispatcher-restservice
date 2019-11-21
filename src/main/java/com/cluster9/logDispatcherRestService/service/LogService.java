@@ -32,22 +32,26 @@ public class LogService {
 		
 		logger.debug("wasCalled");
 		
-		WebLogParagraph newLog = new WebLogParagraph(p);
-		Tag tag = tagRepo.findByName(newLog.getTag());
-		if (tag != null) {
-			System.out.println("tag exist?: " + tag.getName());
-			tag.setComment("comment ok");
-			tag.addWebLogParagraph(newLog);
-			logRepo.save(newLog);
-			newLog.setTagEntity(tag);
-			// tagRepo.save(tag);
-			logRepo.save(newLog);
-		} else {
-			tag = new Tag(newLog.getTag());
-			tag.setComment("comment ok");
-			tag.addWebLogParagraph(newLog);
-			newLog.setTagEntity(tag);
-			logRepo.save(newLog);
-		}
+			// testing the Exception mechanism in lambdas
+//			if (p.getTag().equals("job")) throw new Exception("populateDB RTException constr.");
+			
+			// save the log
+			WebLogParagraph newLog = new WebLogParagraph(p);
+			Tag tag = tagRepo.findByName(newLog.getTag());
+			if (tag != null) {
+				System.out.println("tag exist?: " + tag.getName());
+				tag.setComment("comment ok");
+				tag.addWebLogParagraph(newLog);
+				logRepo.save(newLog);
+				newLog.setTagEntity(tag);
+				// tagRepo.save(tag);
+				logRepo.save(newLog);
+			} else {
+				tag = new Tag(newLog.getTag());
+				tag.setComment("comment ok");
+				tag.addWebLogParagraph(newLog);
+				newLog.setTagEntity(tag);
+				logRepo.save(newLog);
+			}
 	}
 }

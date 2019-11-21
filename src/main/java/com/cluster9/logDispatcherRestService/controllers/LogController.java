@@ -71,6 +71,7 @@ public class LogController {
 		if(foundLog.isPresent()) {
 			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.OK);
 		} else {
+			logger.debug("Optional<Log> {} was not found for the id {}", foundLog, id);
 			return new ResponseEntity<WebLogParagraph>(new WebLogParagraph(0, "noLog", "", "empty"), HttpStatus.NOT_FOUND);
 		}
 	}
