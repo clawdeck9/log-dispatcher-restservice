@@ -10,6 +10,5 @@ mvnw.cmd
 target/
 notes.txt
 notes.txt~
-*.log
-
+logDispatcher.log*
 
