@@ -21,7 +21,7 @@ public interface MapExceptionThrower {
 	// how a lambda calls another lambda????
 	static void rethrowException(MapExceptionThrower function) throws Exception {
 		
-		l -> function.accept(l)
+		// l -> function.accept(l);
 
 	}
 

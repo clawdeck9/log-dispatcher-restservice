@@ -23,6 +23,7 @@ public interface WebLogParagraphRepo extends JpaRepository<WebLogParagraph, Long
 	public Page<WebLogParagraph> findByTag(@Param("tag") String tag,  Pageable pageable	);
 	
 	public List<WebLogParagraph> findByTag(@Param("tag") String tag);
+	
 
 	public Page<WebLogParagraph> findById(@NotNull @Param("id") Long id,  Pageable pageable);
 	

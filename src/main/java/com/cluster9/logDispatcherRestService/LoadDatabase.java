@@ -11,19 +11,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
+import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 //import com.cluster9.logDispatcherRestService.dao.TagRepo;
 //import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
 //import com.cluster9.logDispatcherRestService.entities.Tag;
 //import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
-import com.cluster9.logDispatcherRestService.service.LogService;
+import com.cluster9.logDispatcherRestService.service.LogLoaderService;
 import com.clustercld.logsmanager.DispatchLogFilesContent;
 import com.clustercld.logsmanager.entities.LogParagraph;
 
-@Configuration
+// @Configuration
 class LoadDatabase {
 
 	@Autowired
-	LogService logService;
+	LogLoaderService logService;
 	
 	
 	private String noStaticFunctionOkOrNo() {
@@ -45,8 +46,8 @@ class LoadDatabase {
 			// +tempTag.getLogs().toString());
 			
 			// load the data to the base
-			// the Function is here for learning purposes only
-			DontChangeAnything dont = p -> {
+			// this Function is here for learning purposes only
+			DontChangeAnything<LogParagraph> dont = p -> {
 				System.out.println(noStaticFunctionOkOrNo());
 				System.out.println("map then forEach " + p.getTitle());
 				return p;

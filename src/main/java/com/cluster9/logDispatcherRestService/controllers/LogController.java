@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
 import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
+import com.cluster9.logDispatcherRestService.service.LogsService;
 
 
 
@@ -42,7 +43,9 @@ public class LogController {
 
     Logger logger = LoggerFactory.getLogger(LoggingController.class);
 	@Autowired
-	private WebLogParagraphRepo repo;
+	private WebLogParagraphRepo LogsService;
+	@Autowired
+	private LogsService logsService;
 	@Autowired
 	private ErrorBindingService errorService;
 	
@@ -50,25 +53,25 @@ public class LogController {
 
 	@GetMapping("/logs")
 	public Iterable<WebLogParagraph>  logs(){
-		return repo.findAll();
+		return LogsService.findAll();
 	}
 
 	@GetMapping(value = "/logs-paged", params = { "tag"})
 	public Page<WebLogParagraph>  logsByTag(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
-		return repo.findByTag(tag, pageable );
+		return LogsService.findByTag(tag, pageable );
 	}
 	
 	@GetMapping(value="/logs", params= {"tag"})
 	public ResponseEntity<?>  logByIdPaged(@RequestParam String tag){
 		
-		List<WebLogParagraph> foundLogs = repo.findByTag(tag );
+		List<WebLogParagraph> foundLogs = LogsService.findByTag(tag );
 		return new ResponseEntity<List<WebLogParagraph>>(foundLogs, HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/log", params= {"id"})
 	public ResponseEntity<?>  logById(@RequestParam Long id){
 
-		Optional<WebLogParagraph> foundLog = repo.findById(id);
+		Optional<WebLogParagraph> foundLog = LogsService.findById(id);
 		if(foundLog.isPresent()) {
 			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.OK);
 		} else {
@@ -76,6 +79,12 @@ public class LogController {
 			return new ResponseEntity<WebLogParagraph>(new WebLogParagraph(0, "noLog", "", "empty"), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping(value="/logs/titles", params = {"tag"})
+	public ResponseEntity<?> findTitlesByTag(@RequestParam String tag){
+		return new ResponseEntity<List<String>>(logsService.findTitlesByTag(tag), HttpStatus.OK);
+	}
+
 
 	@PostMapping("/logs")
     public ResponseEntity<?> createLog( @Valid @RequestBody WebLogParagraph log, BindingResult result){
@@ -86,7 +95,7 @@ public class LogController {
         if(errorMap!=null) 
         	return errorMap;
 
-    	WebLogParagraph createdLog = repo.save(log);
+    	WebLogParagraph createdLog = LogsService.save(log);
     	return new ResponseEntity<WebLogParagraph>(createdLog, HttpStatus.CREATED);
     }
     
@@ -101,18 +110,18 @@ public class LogController {
 
         if(id !=null) {
         	System.out.println("restcontroller::updateLog method; deleting log by id: " + id);
-        	if(repo.existsById(id)){
-            	repo.deleteById(id);
+        	if(LogsService.existsById(id)){
+            	LogsService.deleteById(id);
             }
         }
         
-    	WebLogParagraph createdLog = repo.save(log);
+    	WebLogParagraph createdLog = LogsService.save(log);
     	return new ResponseEntity<WebLogParagraph>(createdLog, HttpStatus.CREATED);
     }
     
     @DeleteMapping
     public ResponseEntity<?> deleteLog(@PathVariable Long id, @NotNull final Pageable pageable){
-    	repo.deleteById(id);
+    	LogsService.deleteById(id);
     	return new ResponseEntity<String>("deleted", HttpStatus.ACCEPTED);
     }
     

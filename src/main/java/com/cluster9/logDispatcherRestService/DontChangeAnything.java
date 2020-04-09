@@ -1,15 +1,13 @@
 package com.cluster9.logDispatcherRestService;
 
-import com.clustercld.logsmanager.entities.LogParagraph;
-
 @FunctionalInterface
-public interface DontChangeAnything {
+public interface DontChangeAnything<T> {
 	
-	LogParagraph writeAComment(LogParagraph log);
+	T writeAComment(T t);
 	
-	default LogParagraph writeADefaultComment(LogParagraph log) {
+	default T writeADefaultComment(T t) {
 		System.out.println("functional interface default comment");
-		return log;
+		return t;
 	}
 
 }

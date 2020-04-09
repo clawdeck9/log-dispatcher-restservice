@@ -13,12 +13,11 @@ import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 import com.clustercld.logsmanager.entities.LogParagraph;
 
 
-//l'idée:
-//dans les threads créés par la lambda, il faut appeler des methodes qui permettent de gérer des transactions en toute indépendance
-//je ne suis pas sur que ce soit le cas dans des appels par lambdas
+//the @transactional annot must be therefor the one-to-many relation persistance to work properly. Not doing so induces pb,
+//like no autowired repo available. And of course, the tag instance must exist to be persisted.
 
-@Service
-public class LogService {
+// @Service
+public class LogLoaderService {
 
 	@Autowired
 	WebLogParagraphRepo logRepo;
