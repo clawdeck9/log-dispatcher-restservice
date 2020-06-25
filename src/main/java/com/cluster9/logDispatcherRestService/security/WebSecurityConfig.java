@@ -38,10 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // roles user allow to access /user/**
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.csrf().disable()
-                .authorizeRequests()
+    	http.cors();
+        http.authorizeRequests()
 					.antMatchers("/home").permitAll()
+//					.antMatchers("/log").permitAll()	// delete this
+//					.antMatchers("/logs").permitAll()	// delete this after angular testing
+//					.antMatchers("/tags").permitAll()	// delete this after angular testing
 					.antMatchers("/admin/**").hasAnyRole("ADMIN")
 					//.antMatchers("/logpars").hasAnyRole("USER")
 					.anyRequest().authenticated()

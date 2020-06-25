@@ -27,10 +27,10 @@ public class LogFilter implements Filter{
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         
-		logger.info("request_infos : {} ", httpServletRequest.getRequestURI());
-		logger.info("request_infos : {} ", httpServletResponse.getHeader("Cookie"));
+		logger.info("1 request_infos : {} ", httpServletRequest.getRequestURI());
+		logger.info("1 request_infos : {} ", httpServletResponse.getHeader("Cookie"));
 		chain.doFilter(request, response);
-		logger.info("response infos : {}", response.getContentType());
+//		logger.info("response infos : {}", response.getContentType());
 				
 	}
 

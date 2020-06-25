@@ -28,10 +28,10 @@ public class SecondFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         
-		logger.info("2_request_infos : {} ", httpServletRequest.getRequestURI());
-		logger.info("2_request_infos : {} ", httpServletResponse.getHeader("Cookie"));
+		logger.info("2_request_infos httpServletRequest.getRequestURI()): {} ", httpServletRequest.getRequestURI());
+		logger.info("2_request_infos httpServletResponse.getHeader(\"Cookie\")) : {} ", httpServletResponse.getHeader("Cookie"));
 		chain.doFilter(request, response);
-		logger.info("2_response infos : {}", response.getContentType());
+//		logger.info("2_response infos : {}", response.getContentType());
 		// https://stackoverflow.com/questions/29152431/how-to-get-the-http-request-body-content-in-a-spring-boot-filter/29153152
 		// https://stackoverflow.com/questions/17866996/how-to-access-plain-json-body-in-spring-rest-controller
 	}
