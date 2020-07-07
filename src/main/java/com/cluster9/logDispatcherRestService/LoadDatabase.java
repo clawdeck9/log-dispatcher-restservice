@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
@@ -32,6 +33,11 @@ class LoadDatabase {
 	}
 	
 	@Bean
+	BCryptPasswordEncoder getBCEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
 	@Transactional
 	CommandLineRunner initDatabase() {
 		
@@ -44,6 +50,9 @@ class LoadDatabase {
 			
 			// System.out.println("\nLoadDatabase::tempTag.getLogs().toString(): "
 			// +tempTag.getLogs().toString());
+			
+			// load the user for testing only
+			// TODO:
 			
 			// load the data to the base
 			// this Function is here for learning purposes only

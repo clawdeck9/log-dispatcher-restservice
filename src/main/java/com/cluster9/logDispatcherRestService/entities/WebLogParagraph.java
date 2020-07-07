@@ -55,10 +55,12 @@ public class WebLogParagraph implements Serializable {
 	@JsonFormat(pattern="yyyy-mm-dd")
 	Date accessedDate;
 	
-    @ManyToOne(cascade=CascadeType.ALL)
+
+//	@NotBlank(message ="A tagEntity is required")
+    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="tag_entity")
     Tag tagEntity;
-
+// see https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
 
 	public WebLogParagraph() {

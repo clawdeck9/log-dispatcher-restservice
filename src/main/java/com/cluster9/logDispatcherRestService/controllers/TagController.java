@@ -17,7 +17,7 @@ import com.cluster9.logDispatcherRestService.dao.TagRepo;
 import com.cluster9.logDispatcherRestService.entities.Tag;
 
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 @RequestMapping("/")
 public class TagController {

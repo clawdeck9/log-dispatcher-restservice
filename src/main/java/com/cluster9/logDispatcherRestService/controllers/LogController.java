@@ -3,6 +3,7 @@ package com.cluster9.logDispatcherRestService.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -25,10 +26,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cluster9.logDispatcherRestService.dao.TagRepo;
 import com.cluster9.logDispatcherRestService.dao.WebLogParagraphRepo;
+import com.cluster9.logDispatcherRestService.entities.Tag;
 import com.cluster9.logDispatcherRestService.entities.WebLogParagraph;
 import com.cluster9.logDispatcherRestService.service.ErrorBindingService;
 import com.cluster9.logDispatcherRestService.service.LogsService;
@@ -45,9 +49,11 @@ public class LogController {
 
     Logger logger = LoggerFactory.getLogger(LoggingController.class);
 	@Autowired
-	private WebLogParagraphRepo LogsService;
+	private WebLogParagraphRepo logsRepo;
 	@Autowired
 	private LogsService logsService;
+	@Autowired
+	private TagRepo tagRepo;
 	@Autowired
 	private ErrorBindingService errorService;
 	
@@ -55,26 +61,27 @@ public class LogController {
 
 	@GetMapping("/logs")
 	public Iterable<WebLogParagraph>  logs(){
-		return LogsService.findAll();
+		return logsRepo.findAll();
 	}
 
 	@GetMapping(value = "/logs-paged", params = { "tag"})
 	public Page<WebLogParagraph>  logsByTag(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
-		return LogsService.findByTag(tag, pageable );
+		return logsRepo.findByTag(tag, pageable );
 	}
 	
 	@GetMapping(value="/logs", params= {"tag"})
 	public ResponseEntity<?>  logByIdPaged(@RequestParam String tag){
 		
-		List<WebLogParagraph> foundLogs = LogsService.findByTag(tag );
+		List<WebLogParagraph> foundLogs = logsRepo.findByTag(tag );
 		return new ResponseEntity<List<WebLogParagraph>>(foundLogs, HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/log", params= {"id"})
 	public ResponseEntity<?>  logById(@RequestParam Long id){
 
-		Optional<WebLogParagraph> foundLog = LogsService.findById(id);
+		Optional<WebLogParagraph> foundLog = logsRepo.findById(id);
 		if(foundLog.isPresent()) {
+			System.out.println("LogController::foundLog:"+foundLog.get().getTagEntity().getName());
 			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.OK);
 		} else {
 			logger.debug("Optional<Log> {} was not found for the id {}", foundLog, id);
@@ -87,7 +94,9 @@ public class LogController {
 		return new ResponseEntity<List<String>>(logsService.findTitlesByTag(tag), HttpStatus.OK);
 	}
 
-
+//	TODO:
+//	these methods must check the roles: @Secured({ "ROLE_VIEWER", "ROLE_EDITOR" })
+//	https://www.baeldung.com/spring-security-method-security
 	@PostMapping("/logs")
     public ResponseEntity<?> createLog( @Valid @RequestBody WebLogParagraph log, BindingResult result){
     	System.out.println("restcontroller::createLog method - restcontroller number= " + number + "log tag: "+log.getTag());
@@ -96,34 +105,63 @@ public class LogController {
         
         if(errorMap!=null) 
         	return errorMap;
-
-    	WebLogParagraph createdLog = LogsService.save(log);
+        
+        log = this.findOrCreateTag(log);
+     
+    	WebLogParagraph createdLog = logsRepo.save(log);
     	return new ResponseEntity<WebLogParagraph>(createdLog, HttpStatus.CREATED);
     }
     
     // to update a log, an id must be sent as a param in the URL to delete the old log version and replace it
-    @PutMapping("logs/{id}")
-    public ResponseEntity<?> updateLog(@Valid @RequestBody WebLogParagraph log, @PathVariable Long id, BindingResult result){
+    @PostMapping(value="/logmod", params= {"id"})
+    public ResponseEntity<?> updateLog(@Valid @RequestBody WebLogParagraph log, @RequestParam Long id, BindingResult result){
     	System.out.println("restcontroller::updateLog method - restcontroller number= " + number + "log Title: "+log.getTitle());
-    	
+    	System.out.println("id param value in log controller: " + id);
     	ResponseEntity<?> errorMap = errorService.mapErrors(result);
         if(errorMap!=null) 
         	return errorMap;
 
-        if(id !=null) {
+        if(id !=null) {        	
         	System.out.println("restcontroller::updateLog method; deleting log by id: " + id);
-        	if(LogsService.existsById(id)){
-            	LogsService.deleteById(id);
+        	if(logsRepo.existsById(id)){
+        		logsRepo.deleteById(id);
             }
         }
         
-    	WebLogParagraph createdLog = LogsService.save(log);
+        log = this.findOrCreateTag(log);
+        
+    	WebLogParagraph createdLog = logsRepo.save(log);
     	return new ResponseEntity<WebLogParagraph>(createdLog, HttpStatus.CREATED);
     }
     
+    private WebLogParagraph findOrCreateTag(WebLogParagraph log) {
+        // create a tag if tag doesn't exist
+        if(log.getTag()  != null) {
+        	Tag tag = null;
+        	tag = tagRepo.findByName(log.getTag());
+        	if( tag == null ) {
+        		// create a new tag
+        		tag = new Tag(log.getTag());
+        		tag.setComment("auto created at log creation");
+        	}
+        	log.setTagEntity(tag);
+        } else { 
+        	throw new RuntimeException("tag name was not found in new log");
+        }
+        return log;
+    }
+    
+// 	a PUT exmaple from: https://www.baeldung.com/http-put-patch-difference-spring
+//	@PutMapping("/heavyresource/{id}")
+//	public ResponseEntity<?> saveResource(@RequestBody HeavyResource heavyResource,
+//	  @PathVariable("id") String id) {
+//	    heavyResourceRepository.save(heavyResource, id);
+//	    return ResponseEntity.ok("resource saved");
+//	}
+    
     @DeleteMapping
     public ResponseEntity<?> deleteLog(@PathVariable Long id, @NotNull final Pageable pageable){
-    	LogsService.deleteById(id);
+    	logsRepo.deleteById(id);
     	return new ResponseEntity<String>("deleted", HttpStatus.ACCEPTED);
     }
     

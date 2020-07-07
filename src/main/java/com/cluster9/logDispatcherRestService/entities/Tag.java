@@ -32,10 +32,8 @@ public class Tag implements Serializable{
 	@Id @GeneratedValue
 	Long id;
 
-	@NotBlank
-	@Column(unique=true)
-	
 	//@NaturalId
+	@NotBlank	@Column(unique=true)
 	String name;
 	
 	String comment;
