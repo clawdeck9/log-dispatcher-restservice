@@ -32,8 +32,8 @@ public class Tag implements Serializable{
 	@Id @GeneratedValue
 	Long id;
 
-	//@NaturalId
-	@NotBlank	@Column(unique=true)
+//	@NaturalId
+	@NotBlank @Column(nullable = false, unique = true)
 	String name;
 	
 	String comment;
@@ -138,14 +138,23 @@ public class Tag implements Serializable{
              
         if (!(obj instanceof Tag))
             return false;
-             
+        
+        try {
+			if(this.name.equals(((Tag)obj).getName()))
+				if(!(id.equals(((Tag)obj).getId()))) {
+					throw new Exception("a tag is a duplicate of tag " + name);
+				}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
         return
-            id != null && id.equals(((Tag) obj).getId());
+            id != null && name.equals(((Tag) obj).getName());
     }
 	
     @Override
     public int hashCode() {
-        return id.intValue();
+        return getId().intValue();
     }
 	
 

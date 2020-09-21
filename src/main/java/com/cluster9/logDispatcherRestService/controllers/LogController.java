@@ -81,7 +81,7 @@ public class LogController {
 
 		Optional<WebLogParagraph> foundLog = logsRepo.findById(id);
 		if(foundLog.isPresent()) {
-			System.out.println("LogController::foundLog:"+foundLog.get().getTagEntity().getName());
+			System.out.println("LogController::foundLog:"+foundLog.get().getTag());
 			return new ResponseEntity<WebLogParagraph>(foundLog.get(), HttpStatus.OK);
 		} else {
 			logger.debug("Optional<Log> {} was not found for the id {}", foundLog, id);

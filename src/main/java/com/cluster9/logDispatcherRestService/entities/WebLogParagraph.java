@@ -58,7 +58,7 @@ public class WebLogParagraph implements Serializable {
 
 //	@NotBlank(message ="A tagEntity is required")
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name="tag_entity")
+    @JoinColumn(name="name")
     Tag tagEntity;
 // see https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
