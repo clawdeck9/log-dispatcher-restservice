@@ -32,33 +32,26 @@ public class Tag implements Serializable{
 	@Id @GeneratedValue
 	Long id;
 
-//	@NaturalId
 	@NotBlank @Column(nullable = false, unique = true)
 	String name;
 	
 	String comment;
-	
 
-	@OneToMany(mappedBy = "tag")
-	private List<WebLogParagraph> logs = new ArrayList<WebLogParagraph>();//// only the set interface available
-	
-	//	for testing purposes only. It's not saved in the DB though. this is ok for primitives only
-	@ElementCollection 
-	@CollectionTable(name="log_set",joinColumns=@JoinColumn(name="tag_id"))
-	@Column(name="log_names")
-	private List<String> logNames; 
+//	@OneToMany(mappedBy = "tag")
+//	private List<WebLogParagraph> logs = new ArrayList<WebLogParagraph>();//// only the set interface available
+//	
+//	for testing purposes only. It's not saved in the DB though. this is ok for primitives only
+//	@ElementCollection 
+//	@CollectionTable(name="log_set",joinColumns=@JoinColumn(name="tag_id"))
+//	@Column(name="log_names")
+//	private List<String> logNames; 
 	
 	public Tag() {
 		super();
-		this.logs = new ArrayList<>();
 	}
 	// load WebLogParagraf from log_XXX.txt files folder
 	public Tag(String tagName){
 		this.name = tagName;
-		this.logs = new ArrayList<>();
-		this.logNames = new ArrayList<String>();
-		this.logNames.add("log first");
-		this.logNames.add("log second");
 	}
 
 
@@ -69,24 +62,11 @@ public class Tag implements Serializable{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	public List<String> getLogNames() {
-		return logNames;
-	}
-	
-	public void setLogNames(List<String> logNames) {
-		this.logNames = logNames;
-	}
-	
-	public void addWebLogParagraph(WebLogParagraph log) {
-//		System.out.println("addWebLogParagraph " + log);
-		logs.add(log);
-//		log.setTagEntity(this);
-	}
+
 	
 	@Override
 	public String toString() {
-		return "Tag: "+this.name+"\n  comment: "+this.comment+"\n  temp_names: "+this.logNames+"\n  logs: "+this.logs;
+		return "Tag: "+this.name+"\n  comment: "+this.comment+"\n";
 	}
 
 	public String getName() {
@@ -97,36 +77,11 @@ public class Tag implements Serializable{
 		this.name = name;
 	}
 
-//
-//	public void addWeblogparagraph(WebLogParagraph log) {
-//		this.logs.add(log);
-//	}
-
-
-	public List<WebLogParagraph> getLogs() {
-		return logs;
-	}
-
-
-	/**
-	 * @param logs the logs to set
-	 */
-	public void setLogs(List<WebLogParagraph> logs) {
-		this.logs = logs;
-	}
-
-
-	/**
-	 * @return the comment
-	 */
 	public String getComment() {
 		return comment;
 	}
 
 
-	/**
-	 * @param comment the comment to set
-	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}

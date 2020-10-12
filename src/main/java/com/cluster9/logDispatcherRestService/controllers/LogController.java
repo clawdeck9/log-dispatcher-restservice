@@ -64,17 +64,16 @@ public class LogController {
 		return logsRepo.findAll();
 	}
 
-	@GetMapping(value = "/logs-paged", params = { "tag"})
-	public Page<WebLogParagraph>  logsByTag(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
-		return logsRepo.findByTag(tag, pageable );
-	}
-	
 	@GetMapping(value="/logs", params= {"tag"})
-	public ResponseEntity<?>  logByIdPaged(@RequestParam String tag){
-		
-		List<WebLogParagraph> foundLogs = logsRepo.findByTag(tag );
+	public ResponseEntity<?>  logsByTag(@RequestParam String tag){
+		List<WebLogParagraph> foundLogs = logsRepo.findByTag(tag);
 		return new ResponseEntity<List<WebLogParagraph>>(foundLogs, HttpStatus.OK);
 	}
+
+//	@GetMapping(value = "/logs-paged", params = { "tag"})
+//	public ResponseEntity<?>  logByIdPaged(@RequestParam("tag") String tag, @NotNull final Pageable pageable){
+//		return logsRepo.findByTag(tag, pageable );
+//	}
 	
 	@GetMapping(value="/log", params= {"id"})
 	public ResponseEntity<?>  logById(@RequestParam Long id){

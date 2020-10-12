@@ -19,6 +19,7 @@ import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.cluster9.logDispatcherRestService.dao.TagRepo;
+import com.cluster9.logDispatcherRestService.entities.Tag;
 import com.clustercld.logsmanager.entities.LogParagraph;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -26,10 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class WebLogParagraph implements Serializable {
 	
-//	@Autowired il vaudrait mieux gérer le Tag hors du log, mais utiliser le read du tag peut etre ok -> marche pas du tout
-//	on ne peut pas utiliser le bean repo dans cette entité
-//	TagRepo tagRepo;
-
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Id
 	@GeneratedValue
 	Long id;
@@ -39,6 +37,7 @@ public class WebLogParagraph implements Serializable {
 	@NotBlank(message ="The file name is required")
     String fileName;
     
+	@Column
 	@NotBlank(message ="A tag is required")
     @Size(min=2, max=15, message = "Please use less than 15 characters and no spaces")
     String tag;
@@ -55,11 +54,10 @@ public class WebLogParagraph implements Serializable {
 	@JsonFormat(pattern="yyyy-mm-dd")
 	Date accessedDate;
 	
-
-//	@NotBlank(message ="A tagEntity is required")
-    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name="name")
+    @ManyToOne(optional=false)
+    @JoinColumn(name="tag",referencedColumnName="name", insertable=false, updatable=false)
     Tag tagEntity;
+
 // see https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
 
 
