@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 
 @Service // no annots in the interface declaration
 public class UserDetailsServiceImpl implements UserDetailsService {
+	
+
 	@Autowired
 	private AppUserRepo aur;
 
@@ -39,6 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		}
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		appUser.getRoles().forEach(u -> authorities.add(new SimpleGrantedAuthority(u.getRoleName())));
+		logger.debug("a UserDetails has been created with username: "+username);
 		return new User(appUser.getUsername(), appUser.getPassword(), authorities);
 	}
 	

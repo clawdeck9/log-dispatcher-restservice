@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class WebLogParagraph implements Serializable {
 	
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@GeneratedValue
 	Long id;

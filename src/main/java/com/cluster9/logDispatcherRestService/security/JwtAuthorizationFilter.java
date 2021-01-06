@@ -48,7 +48,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 				.setSigningKey(SecurityConst.SECRET)
 				.parseClaimsJws(jwt.replace(SecurityConst.TOKEN_PREFIX, ""))// suppress the prefix in the token string
 				.getBody();
-		System.out.println("claims from the authorizationFilter = " + claims);
+		logger.debug("claims from the authorizationFilter = " + claims);
 		String username = claims.getSubject();
 		ArrayList<Map<String, String>> roles = (ArrayList<Map<String,String>>) claims.get("roles");
 		Collection<GrantedAuthority> authorities = new ArrayList<>();

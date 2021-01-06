@@ -48,22 +48,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// it could be useless to check if a auth header exists, maybe Spring sec did it before hand
 		AppUser appUser = null;
 		String authHeader = request.getHeader("authorization");
-		System.out.println("authHeader in JwtAuthenticationFilter.attemptAuthentication() " + authHeader);
-				try {
-					appUser = new ObjectMapper().readValue(request.getInputStream(), AppUser.class);
-				} catch (JsonParseException e) {
-					logger.error("JsonParseException Cannot set user authentication: {}", e);
-					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					logger.error("JsonMappingException Cannot set user authentication: {}", e);
-					e.printStackTrace();
-				} catch (IOException e) {
-					logger.error("IOException Cannot set user authentication: {}", e);
-					e.printStackTrace();
-				}
-				
+		logger.debug("SEC:authorizationHeader in JwtAuthenticationFilter.attemptAuthentication() " + authHeader);
+		try {
+			appUser = new ObjectMapper().readValue(request.getInputStream(), AppUser.class);
+		} catch (JsonParseException e) {
+			logger.error("JsonParseException Cannot set user authentication: {}", e);
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			logger.error("JsonMappingException Cannot set user authentication: {}", e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			logger.error("IOException Cannot set user authentication: {}", e);
+			e.printStackTrace();
+		}
+		
 		Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword()));
-		logger.debug("*** Authentication from the AM: " + auth.toString());
+		logger.debug("SEC: Authentication from the AM: " + auth.toString());
 		return auth;
 	}
 	
@@ -82,6 +82,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.addHeader(SecurityConst.HEADER_STRING, SecurityConst.TOKEN_PREFIX + jwt);
 		
 	}
+	
+	
 	public AuthenticationManager getAuthManager() {
 		return authManager;
 	}
