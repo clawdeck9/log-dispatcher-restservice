@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.cluster9.logDispatcherRestService.entities.AppUser;
@@ -28,7 +29,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 
-	Logger logger = LoggerFactory.getLogger("com.cluster9.security.JwtAuthenticationFilter");
+	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 	
 	@Autowired
 	AuthenticationManager authManager;
@@ -48,7 +49,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// it could be useless to check if a auth header exists, maybe Spring sec did it before hand
 		AppUser appUser = null;
 		String authHeader = request.getHeader("authorization");
-		logger.debug("SEC:authorizationHeader in JwtAuthenticationFilter.attemptAuthentication() " + authHeader);
+		logger.debug("§§§§§§§§§§§§§§§§§§§§§§§:JwtAuthenticationFilter.attemptAuthentication() " + authHeader);
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§§§:JwtAuthenticationFilter.attemptAuthentication() " + authHeader);
 		try {
 			appUser = new ObjectMapper().readValue(request.getInputStream(), AppUser.class);
 		} catch (JsonParseException e) {
@@ -61,9 +63,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			logger.error("IOException Cannot set user authentication: {}", e);
 			e.printStackTrace();
 		}
-		
+
+		logger.debug("§§§§§§§§§§§§§§§§§§§§§: Authentication search in AppUserService: " );
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§: Authentication search in AppUserService: " );
 		Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(appUser.getUsername(), appUser.getPassword()));
-		logger.debug("SEC: Authentication from the AM: " + auth.toString());
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§: Authentication from the AM: " + auth.toString());
 		return auth;
 	}
 	
@@ -72,6 +76,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authToken) throws IOException, ServletException {
 
+		logger.debug("§§§§§§§§§§§§§§§§§§§§§: successfulAuthentication: creating a jwt, adding to header " );
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§: successfulAuthentication: creating a jwt, adding to header " );
 		User user = (User) authToken.getPrincipal();
 		// deprec date:  DateFormat.parse(...
 		String jwt = Jwts.builder().setSubject(user.getUsername())

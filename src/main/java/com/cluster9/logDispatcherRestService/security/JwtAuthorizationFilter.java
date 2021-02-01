@@ -24,17 +24,20 @@ import io.jsonwebtoken.Jwts;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
 
-	Logger logger = LoggerFactory.getLogger("com.cluster9.security.JwtAuthorizationFilter");
+	private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// if no jwt: go through th efilter chain
 
+		logger.debug("§§§§§§§§§§§§§§§§§§§§§: AuthorizationFilter starts " );
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§: AuthorizationFilter starts " );
 		String jwt = request.getHeader("authorization");
 		
 		if (jwt == null) {
-			logger.debug("AuthorizationFilter: jwt == null ");
+			logger.debug("§§§§§§§§§§§§§§§§§§§§§§§§§§§AuthorizationFilter: jwt == null ");
+			System.out.println("§§§§§§§§§§§§§§§§§§§§§: AuthorizationFilter: jwt == null " );
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -48,7 +51,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter{
 				.setSigningKey(SecurityConst.SECRET)
 				.parseClaimsJws(jwt.replace(SecurityConst.TOKEN_PREFIX, ""))// suppress the prefix in the token string
 				.getBody();
-		logger.debug("claims from the authorizationFilter = " + claims);
+		logger.debug("§§§§§§§§§§§§§§§§§§§§§§§§§§§§claims from the authorizationFilter = " + claims);
+		System.out.println("§§§§§§§§§§§§§§§§§§§§§§§§§§§  claims from the authorizationFilter = " + claims);
 		String username = claims.getSubject();
 		ArrayList<Map<String, String>> roles = (ArrayList<Map<String,String>>) claims.get("roles");
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
